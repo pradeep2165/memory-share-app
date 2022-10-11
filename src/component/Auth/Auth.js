@@ -9,21 +9,43 @@ import { gapi } from "gapi-script";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { AUTH } from "../../constants/actionTypes";
+import { signin, signup } from "../../actions/auth";
 
+const initialState = { firstName: "", lastName: "", email: "", password: "", confirmPassword: "" };
 const Auth = () => {
+  const [form, setForm] = useState(initialState);
+
   const classes = useStyles();
   const [isSignup, setIsSignUp] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-  const handleSubmit = () => {};
-  const handleChange = () => {};
   const dispatch = useDispatch();
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (isSignup) {
+      if (form.password === form.confirmPassword) {
+        dispatch(signup(form, navigate));
+      } else {
+        alert("Confirm password is not matching");
+      }
+    } else {
+      dispatch(signin(form, navigate));
+    }
+  };
 
   const handleShowPassword = () => {
     setShowPassword((setShowPassword) => !setShowPassword);
   };
   const switchMode = () => {
+    setForm(initialState);
     setIsSignUp((isSignup) => !isSignup);
+    setShowPassword(false);
   };
 
   const googleSuccess = (res) => {
