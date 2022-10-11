@@ -4,10 +4,8 @@ import { useDispatch } from "react-redux";
 import { getPosts } from "../../actions/posts";
 import Form from "../Form/Form";
 import Posts from "../Posts/Posts";
-import useStyles from "../../styles";
 
 const Home = () => {
-  const classes = useStyles();
   const dispatch = useDispatch();
   const [currentId, setCurrentId] = useState(0);
 

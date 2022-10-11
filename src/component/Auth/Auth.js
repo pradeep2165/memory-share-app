@@ -6,14 +6,19 @@ import useStyles from "./styles";
 import Input from "./Input";
 import Icon from "./icon";
 import { gapi } from "gapi-script";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { AUTH } from "../../constants/actionTypes";
 
 const Auth = () => {
   const classes = useStyles();
   const [isSignup, setIsSignUp] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
-
+  const navigate = useNavigate();
   const handleSubmit = () => {};
   const handleChange = () => {};
+  const dispatch = useDispatch();
+
   const handleShowPassword = () => {
     setShowPassword((setShowPassword) => !setShowPassword);
   };
@@ -22,12 +27,18 @@ const Auth = () => {
   };
 
   const googleSuccess = (res) => {
-    console.log(res);
+    const result = res?.profileObj;
+    const token = res?.tokenId;
+
+    try {
+      dispatch({ type: AUTH, data: { result, token } });
+
+      navigate("/", { replace: true });
+    } catch (error) {
+      console.log(error);
+    }
   };
-  const googleError = (error) => {
-    console.log(error);
-    console.log("google authontication failure");
-  };
+  const googleError = () => alert("Google Sign In was unsuccessful. Try again later");
 
   useEffect(() => {
     gapi.load("client:auth2", () => {
