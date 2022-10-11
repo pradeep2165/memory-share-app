@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TextField, Button, Typography, Paper } from "@material-ui/core";
 import FileBase from "react-file-base64";
 import useStyles from "./styles";
-import { useDispatch } from "react-redux";
-import { createPost } from "../../actions/posts";
-const Form = () => {
+import { useDispatch, useSelector } from "react-redux";
+import { createPost, updatePost } from "../../actions/posts";
+const Form = ({ currentId, setCurrentId }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const initial = {
@@ -15,18 +15,31 @@ const Form = () => {
     selectedFile: "",
   };
   const [postData, setPostData] = useState(initial);
+  const post = useSelector((state) => (currentId ? state.posts.find((message) => message._id === currentId) : null));
+
+  useEffect(() => {
+    if (post) setPostData(post);
+  }, [post]);
+
   const clear = () => {
+    setCurrentId(0);
     setPostData(initial);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(createPost(postData));
+    if (currentId === 0) {
+      dispatch(createPost(postData));
+      clear();
+    } else {
+      dispatch(updatePost(currentId, postData));
+      clear();
+    }
   };
   return (
     <Paper className={classes.paper}>
       <form autoComplete="off" noValidate onSubmit={handleSubmit} className={`${classes.root} ${classes.form}`}>
-        <Typography variant="h6"> Ceating a memory</Typography>
+        <Typography variant="h6"> {currentId ? `Editing "${post.title}"` : "Creating a Memory"}</Typography>
         <TextField name="creator" variant="outlined" label="Creator" fullWidth value={postData.creator} onChange={(e) => setPostData({ ...postData, creator: e.target.value })} />
         <TextField name="title" variant="outlined" label="Title" fullWidth value={postData.title} onChange={(e) => setPostData({ ...postData, title: e.target.value })} />
         <TextField name="message" variant="outlined" label="Message" fullWidth value={postData.message} onChange={(e) => setPostData({ ...postData, message: e.target.value })} />
