@@ -1,4 +1,4 @@
-import { CREATE, DELETE, FETCH_ALL, LIKE, UPDATE, FETCH_BY_SEARCH, START_LOADING, END_LOADING } from "../constants/actionTypes";
+import { CREATE, DELETE, FETCH_ALL, FETCH_POST, LIKE, UPDATE, FETCH_BY_SEARCH, START_LOADING, END_LOADING } from "../constants/actionTypes";
 
 // eslint-disable-next-line
 export default (state = { isLoading: true, posts: [] }, action) => {
@@ -13,6 +13,9 @@ export default (state = { isLoading: true, posts: [] }, action) => {
         ...state,
         posts: action.payload,
       };
+    case FETCH_POST:
+      console.log(action.payload);
+      return { ...state, post: action.payload.post };
     case FETCH_BY_SEARCH:
       return { ...state, posts: action.payload.data };
     case CREATE:
