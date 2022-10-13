@@ -16,7 +16,7 @@ const Auth = () => {
   const [form, setForm] = useState(initialState);
 
   const classes = useStyles();
-  const [isSignup, setIsSignUp] = useState(true);
+  const [isSignup, setIsSignUp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();

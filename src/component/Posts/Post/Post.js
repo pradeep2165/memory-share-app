@@ -38,11 +38,10 @@ const Post = ({ post, setCurrentId }) => {
   };
   return (
     <Card className={classes.card}>
-      <CardMedia className={classes.media} image={post.selectedFile} title={post.title}>
-        {" "}
-      </CardMedia>
+      <CardMedia className={classes.media} image={post.selectedFile} title={post.title} />
+
       <div className={classes.overlay}>
-        <Typography variant="h6">{post.creator}</Typography>
+        <Typography variant="h6">{post.name}</Typography>
         <Typography variant="body2">{moment(post.createdAt).fromNow()}</Typography>
       </div>
       <div className={classes.overlay2}>
@@ -60,7 +59,7 @@ const Post = ({ post, setCurrentId }) => {
       </Typography>
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
-          {post.message}
+          {post.message.split(" ").splice(0, 20).join(" ")}...
         </Typography>
       </CardContent>
       <CardActions className={classes.cardActions}>
