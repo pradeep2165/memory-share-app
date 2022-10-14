@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { getPostsBySearch, getPost } from "../../actions/posts";
 import moment from "moment";
+import CommentSection from "./CommentSection";
 
 const PostDetails = () => {
   const { post, isLoading } = useSelector((state) => state.posts);
@@ -19,12 +20,12 @@ const PostDetails = () => {
     // eslint-disable-next-line
   }, [id]);
 
-  //   useEffect(() => {
-  //     if (post) {
-  //       dispatch(getPostsBySearch({ search: "none", tags: post?.tags.join(",") }));
-  //     }
-  //     // eslint-disable-next-line
-  //   }, [post]);
+  useEffect(() => {
+    if (post) {
+      dispatch(getPostsBySearch({ search: "none", tags: post?.tags.join(",") }));
+    }
+    // eslint-disable-next-line
+  }, [post]);
   if (!post) return null;
 
   if (isLoading) {
@@ -59,6 +60,9 @@ const PostDetails = () => {
             </Link>
           </Typography>
           <Typography variant="body1">{moment(post.createdAt).fromNow()}</Typography>
+          <Divider style={{ margin: "20px 0" }} />
+          <CommentSection post={post} />
+          <Divider style={{ margin: "20px 0" }} />
         </div>
         <div className={classes.imageSection}>
           <img className={classes.media} src={post.selectedFile || "https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png"} alt={post.title} sx={{ md: { maxWidth: "720px" } }} />
