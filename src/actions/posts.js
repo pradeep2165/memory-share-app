@@ -15,12 +15,15 @@ export const getPost = (id) => async (dispatch) => {
   }
 };
 
-export const getPosts = () => async (dispatch) => {
+export const getPosts = (page) => async (dispatch) => {
   try {
     dispatch({ type: START_LOADING });
-    const { data } = await api.fetchPosts();
 
-    dispatch({ type: FETCH_ALL, payload: data });
+    const {
+      data: { data, currentPage, numberOfPages },
+    } = await api.fetchPosts(page);
+    console.log(currentPage, numberOfPages);
+    dispatch({ type: FETCH_ALL, payload: { data, currentPage, numberOfPages } });
     dispatch({ type: END_LOADING });
   } catch (error) {
     console.log(error.message);

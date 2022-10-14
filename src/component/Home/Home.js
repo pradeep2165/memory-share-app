@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Container, Grid, Grow, AppBar, TextField, Button } from "@material-ui/core";
+import { Container, Grid, Grow, AppBar, TextField, Button, Paper } from "@material-ui/core";
 import { useDispatch } from "react-redux";
 import { getPosts } from "../../actions/posts";
 import Form from "../Form/Form";
 import Posts from "../Posts/Posts";
 import useStyles from "./styles";
-import { useNavigate } from "react-router-dom";
-import { getPostsBySearch } from "../../actions/posts";
+import { useLocation, useNavigate } from "react-router-dom";
+
 import ChipInput from "material-ui-chip-input";
+import { getPostsBySearch } from "../../actions/posts";
+import Pagination from "../Pagination";
 
 const Home = () => {
   const classes = useStyles();
@@ -15,6 +17,13 @@ const Home = () => {
   const [currentId, setCurrentId] = useState(0);
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
+  const query = useQuery();
+  const page = query.get("page") || 1;
+  const searchQuery = query.get("searchQuery");
+
+  function useQuery() {
+    return new URLSearchParams(useLocation().search);
+  }
 
   const [tags, setTags] = useState([]);
 
@@ -36,6 +45,10 @@ const Home = () => {
 
   const handleDeleteChip = (chipToDelete) => setTags(tags.filter((tag) => tag !== chipToDelete));
 
+  function useQuery() {
+    return new URLSearchParams(useLocation().search);
+  }
+
   useEffect(() => {
     dispatch(getPosts());
   }, [dispatch, currentId]);
@@ -56,6 +69,11 @@ const Home = () => {
               </Button>
             </AppBar>
             <Form currentId={currentId} setCurrentId={setCurrentId} />
+            {!searchQuery && !tags.length && (
+              <Paper className={classes.pagination} elevation={6}>
+                <Pagination page={page} />
+              </Paper>
+            )}
           </Grid>
         </Grid>
       </Container>
